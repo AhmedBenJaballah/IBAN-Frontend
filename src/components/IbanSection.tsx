@@ -1,21 +1,40 @@
-import axios from "axios";
-import React, { useState } from "react";
+import apiClient from "../services/api-client";
+import React, { useState, useEffect } from "react";
 
+export interface IBAN {
+  iban: string;
+  bankName: string;
+  country:string;
+}
 
 function IbanSection() {
-  const [iban, setIban] = useState(""); 
-  const [responseMessage, setResponseMessage] = useState(""); 
+  const [ibanData, setIbanData] = useState("");
+  const [responseMessage, setResponseMessage] = useState("");
+  const [triggerValidation,setTriggerValidation]=useState(true);
+  const [ibanCountry,setIbanCountry]= useState("");
+  const [ibanBankName,setIbanBankName]= useState("");
 
-  const handleVerifyClick = () => {
-    axios.post("/iban", { iban })
-      .then((response) => {
-        setResponseMessage(response.data.message); 
-      })
-      .catch((error) => {
-        console.error("Error verifying IBAN:", error);
-        setResponseMessage("An error occurred while verifying the IBAN."); 
-      });
-  };
+
+  useEffect(() => {
+      
+        apiClient
+        .post("/iban", { iban: ibanData }) 
+        .then((response) => {
+          setIbanCountry(response.data.country);
+          setIbanBankName(response.data.bankName);
+          setResponseMessage(response.data.message);
+        })
+        .catch((error) => {
+          console.error("Error verifying IBAN:", error);
+          setResponseMessage("An error occurred while verifying the IBAN.");
+        })
+    
+  }, [triggerValidation]); 
+
+
+  function handleTypping(e: React.ChangeEvent<HTMLInputElement>){
+    setIbanData(e.target.value);
+  }
 
   return (
     <>
@@ -25,14 +44,18 @@ function IbanSection() {
           type="text"
           className="form-control"
           id="iban"
+          name="iban"
           placeholder="Type IBAN"
-          value={iban} 
-          onChange={(e) => setIban(e.target.value)} 
+          onChange={(e)=>handleTypping(e)}
         />
-        <button className="btn btn-primary" onClick={handleVerifyClick}>
-          Verify
-        </button>
       </div>
+
+      <button className="btn btn-primary" onClick={() => setTriggerValidation(!triggerValidation)}>
+        Verify
+      </button>
+
+      {<p>country: {ibanCountry}</p>}
+      {<p>bank name: {ibanBankName}</p>}
       {responseMessage && <div className="alert alert-info mt-3">{responseMessage}</div>}
     </>
   );
