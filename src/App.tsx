@@ -1,5 +1,6 @@
 import './App.css'
-import IbanSection from './components/ibanSection'
+import IbanSection from './components/IbanSection' ;
+
 
 
 function App() {
