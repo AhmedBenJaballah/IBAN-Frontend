@@ -6,11 +6,13 @@ export interface IBAN {
   country: string;
 }
 
+
+//To do resp interface
 class ibanService{
 
-    verifyIban(ibanData:string){
+    verifyIban(iban:string){
         const controller = new AbortController();
-        const request = apiClient.post("/iban", { iban: ibanData }, {signal:controller.signal} );
+        const request = apiClient.post<IBAN>("/iban", { iban }, {signal:controller.signal} );
         return { request,cancel: ()=>{controller.abort()}}
     }
 

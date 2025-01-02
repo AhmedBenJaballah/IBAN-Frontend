@@ -1,44 +1,16 @@
-
-import { CanceledError } from "../services/api-client";
-import React, { useState, useEffect } from "react";
-import ibanService from "../services/iban-service";
+import React from "react";
+import useIban from "../hooks/useIban";
 
 function IbanSection() {
-  const [ibanData, setIbanData] = useState("");
-  const [responseMessage, setResponseMessage] = useState("");
-  const [triggerValidation, setTriggerValidation] = useState(true);
-  const [ibanCountry, setIbanCountry] = useState("");
-  const [ibanBankName, setIbanBankName] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    
-    if (ibanData.trim()) {
-      setLoading(true);
-        const {request,cancel} = ibanService.verifyIban(ibanData);
-        request.then((response) => {
-          setIbanCountry(response.data.country);
-          setIbanBankName(response.data.bankName);
-          setResponseMessage(response.data.message || "IBAN verified successfully.");
-        })
-        .catch((err) => {
-          //To do add server err
-          if (err instanceof CanceledError) return;
-          setResponseMessage("The entered IBAN is not valid.");
-        })
-        .finally(() => setLoading(false));
-        return ()=> cancel();
-    }
-  }, [triggerValidation]);
+  const { ibanData, responseMessage, triggerValidation, loading, setIbanData,setResponseMessage, setTriggerValidation } = useIban();
 
   function handleTyping(e: React.ChangeEvent<HTMLInputElement>) {
-    setIbanData(e.target.value);
+    setIbanData((prev) => ({ ...prev, iban: e.target.value }));
   }
 
   function handleVerify() {
-    if (ibanData.trim()) {
-      setIbanCountry("");
-      setIbanBankName("");
+    if (ibanData.iban.trim()) {
+      setIbanData((prev) => ({ ...prev, bankName: "", country: "" }));
       setResponseMessage("");
       setTriggerValidation(!triggerValidation);
     } else {
@@ -82,14 +54,14 @@ function IbanSection() {
                 </div>
               </div>
             )}
-            {!loading && ibanCountry && (
+            {!loading && ibanData.country && (
               <p className="mb-1">
-                <strong>Country:</strong> {ibanCountry}
+                <strong>Country:</strong> {ibanData.country}
               </p>
             )}
-            {!loading && ibanBankName && (
+            {!loading && ibanData.bankName && (
               <p className="mb-1">
-                <strong>Bank Name:</strong> {ibanBankName}
+                <strong>Bank Name:</strong> {ibanData.bankName}
               </p>
             )}
             {responseMessage && !loading && (
