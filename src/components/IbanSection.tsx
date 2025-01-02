@@ -1,4 +1,5 @@
-import apiClient from "../services/api-client";
+
+import apiClient, { CanceledError } from "../services/api-client";
 import React, { useState, useEffect } from "react";
 
 export interface IBAN {
@@ -16,19 +17,24 @@ function IbanSection() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    
     if (ibanData.trim()) {
       setLoading(true);
+      const controller = new AbortController();
       apiClient
-        .post("/iban", { iban: ibanData })
+        .post("/iban", { iban: ibanData }, {signal:controller.signal} )
         .then((response) => {
           setIbanCountry(response.data.country);
           setIbanBankName(response.data.bankName);
           setResponseMessage(response.data.message || "IBAN verified successfully.");
         })
-        .catch(() => {
+        .catch((err) => {
+          //To do add server err
+          if (err instanceof CanceledError) return;
           setResponseMessage("The entered IBAN is not valid.");
         })
         .finally(() => setLoading(false));
+        return ()=> controller.abort();
     }
   }, [triggerValidation]);
 
