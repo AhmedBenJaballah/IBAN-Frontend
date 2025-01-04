@@ -2,7 +2,7 @@ import React from "react";
 import useIban from "../hooks/useIban";
 
 function IbanSection() {
-  const { ibanData, responseMessage, triggerValidation, loading, setIbanData,setResponseMessage, setTriggerValidation } = useIban();
+  const { ibanData, responseMessage, triggerValidation, loading, setIbanData, setResponseMessage, setTriggerValidation } = useIban();
 
   function handleTyping(e: React.ChangeEvent<HTMLInputElement>) {
     setIbanData((prev) => ({ ...prev, iban: e.target.value }));
@@ -22,9 +22,9 @@ function IbanSection() {
     <div className="container mt-5">
       <div className="card shadow-sm">
         <div className="card-body">
-          <h5 className="card-title">IBAN Verification</h5>
-          <div className="mb-3">
-            <label htmlFor="iban" className="form-label">
+          <h5 className="card-title mb-4">IBAN Verification</h5>
+          <div className="mb-3 input-wrapper">
+            <label htmlFor="iban" className={`form-label ${ibanData.iban.trim() ? "focused" : ""}`}>
               Enter IBAN
             </label>
             <input
@@ -33,7 +33,8 @@ function IbanSection() {
               id="iban"
               name="iban"
               placeholder="Type IBAN"
-              onChange={(e) => handleTyping(e)}
+              value={ibanData.iban}
+              onChange={handleTyping}
             />
           </div>
           <button className="btn btn-primary w-100" onClick={handleVerify} disabled={loading}>
@@ -65,7 +66,7 @@ function IbanSection() {
               </p>
             )}
             {responseMessage && !loading && (
-              <div className="alert alert-info mt-3">{responseMessage}</div>
+              <div className="alert alert-primary mt-3">{responseMessage}</div>
             )}
           </div>
         </div>
