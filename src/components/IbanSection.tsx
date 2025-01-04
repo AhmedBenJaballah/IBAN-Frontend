@@ -2,7 +2,7 @@ import React from "react";
 import useIban from "../hooks/useIban";
 
 function IbanSection() {
-  const { ibanData, responseMessage, triggerValidation, loading, setIbanData, setResponseMessage, setTriggerValidation } = useIban();
+  const { ibanData, responseMessage, triggerValidation, loading, setIbanData, setResponseMessage, setTriggerValidation, setUseOpenApi, useOpenApi } = useIban();
 
   function handleTyping(e: React.ChangeEvent<HTMLInputElement>) {
     setIbanData((prev) => ({ ...prev, iban: e.target.value }));
@@ -37,11 +37,42 @@ function IbanSection() {
               onChange={handleTyping}
             />
           </div>
+          
+          {/* Radio Button to toggle between APIs */}
+          <div className="mb-3">
+            <label>Choose Validation Method:</label>
+            <div className="form-check">
+              <input
+                type="radio"
+                className="form-check-input"
+                id="currentMethod"
+                name="validationMethod"
+                checked={!useOpenApi}
+                onChange={() => setUseOpenApi(false)}
+              />
+              <label className="form-check-label" htmlFor="currentMethod">
+                Current Implementation
+              </label>
+            </div>
+            <div className="form-check">
+              <input
+                type="radio"
+                className="form-check-input"
+                id="openApiMethod"
+                name="validationMethod"
+                checked={useOpenApi}
+                onChange={() => setUseOpenApi(true)}
+              />
+              <label className="form-check-label" htmlFor="openApiMethod">
+                Open API Validation
+              </label>
+            </div>
+          </div>
+
           <button className="btn btn-primary w-100" onClick={handleVerify} disabled={loading}>
             {loading ? (
               <span>
-                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>{" "}
-                Verifying...
+                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Verifying...
               </span>
             ) : (
               "Verify"
