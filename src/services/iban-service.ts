@@ -4,8 +4,8 @@ export interface IBAN {
   iban: string;
   bankName: string;
   country: string;
+  valid:boolean;
 }
-
 
 //To do resp interface
 class ibanService{
