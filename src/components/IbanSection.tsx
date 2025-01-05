@@ -37,8 +37,7 @@ function IbanSection() {
               onChange={handleTyping}
             />
           </div>
-          
-          {/* Radio Button to toggle between APIs */}
+        
           <div className="mb-3">
             <label>Choose Validation Method:</label>
             <div className="form-check">
@@ -97,7 +96,7 @@ function IbanSection() {
               </p>
             )}
             {responseMessage && !loading && (
-              <div className="alert alert-primary mt-3">{responseMessage}</div>
+              <div  className={`alert mt-3 ${ibanData.valid ? "alert-success" : "alert-danger"}`}>{responseMessage}</div>
             )}
           </div>
         </div>

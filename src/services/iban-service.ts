@@ -7,7 +7,6 @@ export interface IBAN {
   valid:boolean;
 }
 
-//To do resp interface
 class ibanService{
 
     verifyIban(iban:string){
