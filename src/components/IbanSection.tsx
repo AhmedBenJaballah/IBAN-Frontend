@@ -4,10 +4,19 @@ import useIban from "../hooks/useIban";
 function IbanSection() {
   const { ibanData, responseMessage, triggerValidation, loading, setIbanData, setResponseMessage, setTriggerValidation, setUseOpenApi, useOpenApi } = useIban();
 
+  /**
+ * Handles user input in the IBAN input field.
+ * 
+ * @param {React.ChangeEvent<HTMLInputElement>} e - The input change event.
+ */
   function handleTyping(e: React.ChangeEvent<HTMLInputElement>) {
     setIbanData((prev) => ({ ...prev, iban: e.target.value }));
   }
 
+  /**
+   * Triggers the IBAN verification process.
+   * Resets certain fields and sets the `triggerValidation` state to trigger the validation process.
+   */
   function handleVerify() {
     if (ibanData.iban.trim()) {
       setIbanData((prev) => ({ ...prev, bankName: "", country: "" }));
@@ -37,7 +46,7 @@ function IbanSection() {
               onChange={handleTyping}
             />
           </div>
-        
+
           <div className="mb-3">
             <label>Choose Validation Method:</label>
             <div className="form-check">
@@ -96,7 +105,7 @@ function IbanSection() {
               </p>
             )}
             {responseMessage && !loading && (
-              <div  className={`alert mt-3 ${ibanData.valid ? "alert-success" : "alert-danger"}`}>{responseMessage}</div>
+              <div className={`alert mt-3 ${ibanData.valid ? "alert-success" : "alert-danger"}`}>{responseMessage}</div>
             )}
           </div>
         </div>

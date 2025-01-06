@@ -9,7 +9,7 @@ function ImportantNote() {
     navigator.clipboard.writeText(sampleIban)
       .then(() => {
         setButtonVisible(false);
-        setTimeout(() => setButtonVisible(true), 3000); 
+        setTimeout(() => setButtonVisible(true), 3000);
       })
       .catch(() => setButtonVisible(true));
   };
