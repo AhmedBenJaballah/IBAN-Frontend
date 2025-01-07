@@ -59,7 +59,7 @@ function IbanSection() {
                 onChange={() => setUseOpenApi(false)}
               />
               <label className="form-check-label" htmlFor="currentMethod">
-                Current Implementation
+              Default Validation
               </label>
             </div>
             <div className="form-check">
@@ -72,7 +72,7 @@ function IbanSection() {
                 onChange={() => setUseOpenApi(true)}
               />
               <label className="form-check-label" htmlFor="openApiMethod">
-                Open API Validation
+                Openiban API Validation
               </label>
             </div>
           </div>
